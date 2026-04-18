@@ -1,4 +1,3 @@
-<!-- Worked with Yunte Lee-->
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,11 +5,15 @@
 </head>
 <body>
 
-<button id="play">Activate Babbling Brook</button>
-<button id="stop">Stop Babbling Brook</button>
+<button id="play_brook">Activate Babbling Brook</button>
+<button id="play_dial">Activate Dial Tone</button>
+<button id="stop_brook">Stop Audio</button>
+
 <script>
 let audioCtx;
-document.getElementById("play").onclick = () => {
+
+// babbling brook logic
+document.getElementById("play_brook").onclick = () => {
 
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -76,12 +79,52 @@ document.getElementById("play").onclick = () => {
     gain.connect(audioCtx.destination);
 };
 
-document.getElementById("stop").onclick = () => {
+
+// dial tone
+document.getElementById("play_dial").onclick = () => {
+
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    const dialGain = audioCtx.createGain();
+    dialGain.gain.value = 0.1;
+
+    const osc1 = audioCtx.createOscillator();
+    osc1.type = "sine";
+    osc1.frequency.value = 350;
+
+    const osc2 = audioCtx.createOscillator();
+    osc2.type = "sine";
+    osc2.frequency.value = 440;
+
+ 
+
+    const bandpass = audioCtx.createBiquadFilter();
+    bandpass.type = "bandpass";
+    bandpass.frequency.value = 2000;
+
+    const highpass = audioCtx.createBiquadFilter();
+    highpass.type = "highpass";
+    highpass.frequency.value = 400;
+
+    // connect
+    osc1.connect(dialGain);
+    osc2.connect(dialGain);
+
+    dialGain.connect(bandpass);
+    bandpass.connect(highpass);
+    highpass.connect(audioCtx.destination);
+
+    osc1.start();
+    osc2.start();
+};
+
+
+document.getElementById("stop_brook").onclick = () => {
     if (audioCtx) {
         audioCtx.close();
     }
 };
-
 </script>
+
 </body>
 </html>
