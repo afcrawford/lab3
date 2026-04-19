@@ -1,14 +1,24 @@
-<!-- Worked with Yunte Lee-->
+<!--Worked with Yunte Lee-->
 <!DOCTYPE html>
 <html>
 <head>
-    <h1>Babbling Brook</h1>
+<title>Babbling Brook</title>
 </head>
 <body>
-
+<h1>Babbling Brook</h1>
 <button id="play_brook">Activate Babbling Brook</button>
 <button id="play_dial">Activate Dial Tone</button>
 <button id="stop_brook">Stop Audio</button>
+<img src=audioflow.png" alt="Audio flow diagram of dial tone signal chain">
+<h2> Code Explanation </h2>
+<p>For this project, I was aiming to recreate a dial tone sound, which would be used to show the caller that they can dial. 
+    All values and methods were taken from the book.
+    I started by combining 2 sine wave oscillators of 350Hz and 440Hz, which are standard for dial tones as mentioned in the book.
+    Having these two sine waves stacked also creates the dial tone through additive synthesis.
+    I then connected the oscillators to a gain node with a value of 0.125, which was taken from the description in the book but also ensures that the stacking of the oscillators stays at a reasonable volume. 
+    After, I connected them to a bandpass filter with a frequency of 2000, and connected that filter to a highpass filter with a frequency of 400.
+    The connection of these filters helped to create the dial tone sound, as they distorted and thinned the audio into the standard dial tone sound.
+</p>
 
 <script>
 let audioCtx;
@@ -87,7 +97,7 @@ document.getElementById("play_dial").onclick = () => {
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
     const dialGain = audioCtx.createGain();
-    dialGain.gain.value = 0.1;
+    dialGain.gain.value = 0.125;
 
     const osc1 = audioCtx.createOscillator();
     osc1.type = "sine";
